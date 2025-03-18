@@ -1,16 +1,16 @@
-name: Run PyTest on Push
+name: Run PyTest and Generate Report
 
 on:
   push:
     branches:
-      - main  # Runs on push to main branch
+      - main
   pull_request:
     branches:
-      - main  # Runs on PRs to main branch
+      - main
 
 jobs:
   test:
-    runs-on: ubuntu-latest  # Runs on a Linux machine
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
@@ -19,12 +19,17 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'  # Replace with your Python version (e.g., 3.10)
+          python-version: '3.x'
 
       - name: Install dependencies
         run: |
-          pip install pytest
-          pip install -r requirements.txt  # If you have a requirements file
+          pip install pytest pytest-html
 
-      - name: Run PyTest
-        run: pytest
+      - name: Run PyTest and Generate Report
+        run: pytest --html=report.html --self-contained-html
+
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: pytest-report
+          path: report.html
