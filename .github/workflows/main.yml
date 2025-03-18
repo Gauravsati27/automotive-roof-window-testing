@@ -1,0 +1,30 @@
+name: Run PyTest on Push
+
+on:
+  push:
+    branches:
+      - main  # Runs on push to main branch
+  pull_request:
+    branches:
+      - main  # Runs on PRs to main branch
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # Runs on a Linux machine
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'  # Replace with your Python version (e.g., 3.10)
+
+      - name: Install dependencies
+        run: |
+          pip install pytest
+          pip install -r requirements.txt  # If you have a requirements file
+
+      - name: Run PyTest
+        run: pytest
